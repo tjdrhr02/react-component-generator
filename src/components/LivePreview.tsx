@@ -1,19 +1,28 @@
 import { LiveProvider, LivePreview as ReactLivePreview, LiveError } from 'react-live';
 
+type Viewport = 'mobile' | 'tablet' | 'desktop';
+
 interface LivePreviewProps {
   code: string;
+  viewport?: Viewport;
 }
 
-export function LivePreview({ code }: LivePreviewProps) {
+const VIEWPORT_WIDTHS: Record<Viewport, string> = {
+  mobile: '375px',
+  tablet: '768px',
+  desktop: '100%',
+};
+
+export function LivePreview({ code, viewport = 'desktop' }: LivePreviewProps) {
+  const width = VIEWPORT_WIDTHS[viewport];
   return (
     <div className="preview-panel">
-      <div className="panel-header">
-        <h3>미리보기</h3>
-      </div>
       <div className="preview-content">
         <LiveProvider code={code} noInline>
-          <div className="preview-render">
-            <ReactLivePreview />
+          <div className="preview-viewport-wrapper">
+            <div className="preview-render" style={{ width, flexShrink: 0 }}>
+              <ReactLivePreview />
+            </div>
           </div>
           <LiveError className="preview-error" />
         </LiveProvider>

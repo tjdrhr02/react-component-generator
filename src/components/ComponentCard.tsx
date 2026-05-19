@@ -11,10 +11,18 @@ interface ComponentCardProps {
 }
 
 type Tab = 'preview' | 'code';
+type Viewport = 'mobile' | 'tablet' | 'desktop';
+
+const VIEWPORTS: { key: Viewport; label: string; title: string }[] = [
+  { key: 'mobile', label: '모바일', title: '모바일 (375px)' },
+  { key: 'tablet', label: '태블릿', title: '태블릿 (768px)' },
+  { key: 'desktop', label: '데스크탑', title: '데스크탑 (100%)' },
+];
 
 export function ComponentCard({ component, onRemove, onRegenerate, isLoading }: ComponentCardProps) {
   const [activeTab, setActiveTab] = useState<Tab>('preview');
   const [previewKey, setPreviewKey] = useState(0);
+  const [viewport, setViewport] = useState<Viewport>('desktop');
   const createdAt = component.createdAt.toLocaleTimeString('ko-KR', {
     hour: '2-digit',
     minute: '2-digit',
@@ -65,9 +73,23 @@ export function ComponentCard({ component, onRemove, onRegenerate, isLoading }: 
           코드
         </button>
       </div>
+      {activeTab === 'preview' && (
+        <div className="viewport-toolbar">
+          {VIEWPORTS.map(({ key, label, title }) => (
+            <button
+              key={key}
+              className={`btn-viewport ${viewport === key ? 'btn-viewport--active' : ''}`}
+              onClick={() => setViewport(key)}
+              title={title}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
+      )}
       <div className="card-content">
         {activeTab === 'preview' ? (
-          <LivePreview key={previewKey} code={component.code} />
+          <LivePreview key={previewKey} code={component.code} viewport={viewport} />
         ) : (
           <CodeView code={component.code} />
         )}
