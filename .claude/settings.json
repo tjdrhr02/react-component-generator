@@ -19,5 +19,19 @@
         "**/.DS_Store"
       ]
     }
+  },
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "shell": "powershell",
+            "command": "pwsh -NoProfile -ExecutionPolicy Bypass -File .claude/hooks/check-test.ps1"
+          }
+        ]
+      }
+    ]
   }
 }
