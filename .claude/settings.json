@@ -1,0 +1,23 @@
+{
+  "permissions": {
+    "deny": {
+      "Read": [
+        "**/.env*",
+        "**/*.key",
+        "**/*.pem",
+        "**/*.p12",
+        "**/*.pfx",
+        "**/.aws/**",
+        "**/.kube/**",
+        "**/.ssh/**",
+        "**/node_modules/**",
+        "**/dist/**",
+        "**/build/**",
+        "**/.git/**",
+        "**/.vscode/settings.json",
+        "**/settings.local.json",
+        "**/.DS_Store"
+      ]
+    }
+  }
+}
