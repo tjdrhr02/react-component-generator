@@ -7,7 +7,8 @@
     "dev": "concurrently -n api,vite -c blue,green \"bun run server\" \"vite\"",
     "server": "bun --watch run server/index.ts",
     "build": "tsc -b && vite build",
-    "lint": "eslint .",
+    "lint": "eslint . --fix",
+    "type-check": "tsc --noEmit",
     "preview": "vite preview"
   },
   "dependencies": {
