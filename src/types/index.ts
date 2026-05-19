@@ -5,4 +5,10 @@ export interface GeneratedComponent {
   prompt: string;
   code: string;
   createdAt: Date;
+  provider: Provider;
+}
+
+export interface ComponentHistory {
+  components: GeneratedComponent[];
+  totalCount: number;
 }
