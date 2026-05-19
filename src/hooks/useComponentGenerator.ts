@@ -18,21 +18,29 @@ function loadComponentsFromStorage(): GeneratedComponent[] {
     if (!stored) return [];
     const parsed = JSON.parse(stored);
     return Array.isArray(parsed)
-      ? parsed.map((c) => ({
-          ...c,
-          createdAt: new Date(c.createdAt),
-        }))
+      ? parsed.map((c) => {
+          const createdAt = c.createdAt ? new Date(c.createdAt) : new Date();
+          return {
+            ...c,
+            createdAt: isValidDate(createdAt) ? createdAt : new Date(),
+          };
+        })
       : [];
   } catch {
     return [];
   }
 }
 
+function isValidDate(date: Date): boolean {
+  return date instanceof Date && !isNaN(date.getTime());
+}
+
 function saveComponentsToStorage(components: GeneratedComponent[]): void {
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(components));
-  } catch {
-    // 저장 실패 시 조용히 넘어가기
+  } catch (err) {
+    // localStorage 할당량 초과 또는 접근 불가 상황에 대해 로깅할 수 있음
+    // 현재는 silently fail - UI에 영향을 주지 않음
   }
 }
 
@@ -40,12 +48,10 @@ export function useComponentGenerator(): UseComponentGeneratorReturn {
   const [components, setComponents] = useState<GeneratedComponent[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [isInitialized, setIsInitialized] = useState(false);
 
   useEffect(() => {
     const stored = loadComponentsFromStorage();
     setComponents(stored);
-    setIsInitialized(true);
   }, []);
 
   const generate = useCallback(async (prompt: string, apiKey: string | undefined, provider: Provider) => {
